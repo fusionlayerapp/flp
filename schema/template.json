@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flp.fusionlayer.app/schema/v1/template",
+  "title": "FLP Template",
+  "description": "UI/UX preset combining visual tokens, layout topology, and component composition.",
+  "type": "object",
+  "required": ["kind", "version", "id", "name"],
+  "additionalProperties": false,
+  "properties": {
+    "kind": { "const": "template" },
+    "version": { "const": 1 },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*$",
+      "description": "Slug identifier (lowercase, hyphens/underscores only)."
+    },
+    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "description": { "type": "string", "maxLength": 500 },
+    "tokens": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "preset": { "type": "string", "maxLength": 64 },
+        "density": { "type": "string", "enum": ["compact", "comfortable", "spacious"] },
+        "radius": { "type": "string", "enum": ["none", "subtle", "medium", "large"] },
+        "font_scale": { "type": "number", "minimum": 0.5, "maximum": 2 },
+        "accent": { "type": "string", "maxLength": 64 }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sidebar": { "type": "string", "enum": ["left", "right", "hidden"] },
+        "header": { "type": "string", "enum": ["fixed", "floating", "none"] },
+        "home_view": { "type": "string", "enum": ["dashboard", "chat", "library", "command-palette"] },
+        "chat_panel_width": { "type": "string", "maxLength": 16 }
+      }
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cards": { "type": "string", "enum": ["rounded", "flat"] },
+        "list_mode": { "type": "string", "enum": ["comfortable", "dense"] },
+        "default_tabs": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 32 },
+          "maxItems": 8
+        }
+      }
+    }
+  }
+}

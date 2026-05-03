@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flp.fusionlayer.app/schema/v1/policy",
+  "title": "FLP Policy",
+  "description": "Hard enforcement rule applied pre- or post-generation (PII redaction, denylist, budget cap, etc.).",
+  "type": "object",
+  "required": ["meta", "rules"],
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "$ref": "meta",
+      "properties": { "kind": { "const": "policy" } }
+    },
+    "enforce": {
+      "type": "string",
+      "enum": ["pre", "post", "both"],
+      "default": "both",
+      "description": "When to apply: before generation (pre), after (post), or both."
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["type"],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["pii_block", "secret_block", "budget_cap", "vendor_allowlist", "export_block", "banned_topics", "response_audit", "compliance_region"],
+            "description": "Rule type that the runtime enforcement engine recognises."
+          },
+          "action": {
+            "type": "string",
+            "description": "Action to take on match (e.g. 'redact', 'block', 'warn')."
+          },
+          "params": {
+            "type": "object",
+            "description": "Rule-specific parameters.",
+            "additionalProperties": true
+          }
+        }
+      }
+    }
+  }
+}

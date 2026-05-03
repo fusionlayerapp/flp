@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flp.fusionlayer.app/schema/v1/intent",
+  "title": "FLP Intent",
+  "description": "Declares a task class with trigger conditions, required capabilities, and a task-specific system prompt injection.",
+  "type": "object",
+  "required": ["meta", "trigger"],
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "$ref": "meta",
+      "properties": { "kind": { "const": "intent" } }
+    },
+    "trigger": {
+      "type": "object",
+      "required": ["mode"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["keyword", "intent", "always"],
+          "description": "'keyword' matches on literal strings; 'intent' uses semantic classification; 'always' fires on every turn."
+        },
+        "patterns": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Keyword or intent patterns that activate this intent."
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Capability tags the runtime requires to execute this intent (e.g. 'code_analysis', 'web_search')."
+    },
+    "prompt": {
+      "type": "string",
+      "description": "System prompt fragment injected when this intent is active."
+    },
+    "attachments": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "File attachment types this intent can handle (e.g. 'image', 'pdf', 'code')."
+    },
+    "adapters": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Preferred adapter IDs for this intent (e.g. 'anthropic', 'openai')."
+    },
+    "uses": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "References to other primitives this intent composes (e.g. '@acme/code-guideline')."
+    }
+  }
+}

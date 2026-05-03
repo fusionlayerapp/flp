@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flp.fusionlayer.app/schema/v1/strategy",
+  "title": "FLP Strategy",
+  "description": "Declares a multi-node execution graph: which adapters to call, in what order, with what fusion logic.",
+  "type": "object",
+  "required": ["meta", "graph"],
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "$ref": "meta",
+      "properties": { "kind": { "const": "strategy" } }
+    },
+    "graph": {
+      "type": "object",
+      "required": ["nodes", "output"],
+      "additionalProperties": false,
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "op"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "minLength": 1, "maxLength": 64 },
+              "op": {
+                "type": "string",
+                "enum": ["generate", "critique-and-rank", "merge", "filter", "route", "fanout", "fanin"],
+                "description": "Node operation type."
+              },
+              "adapter": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "vendor": { "type": "string", "description": "Adapter vendor ID (e.g. 'anthropic', 'openai', 'google')." },
+                  "model_hint": { "type": "string", "description": "Model hint (e.g. 'claude-haiku-4-5', 'gpt-4o-mini')." }
+                }
+              },
+              "uses": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "skill": { "type": "string" },
+                  "prompt": { "type": "string" }
+                }
+              },
+              "inputs": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Node IDs whose outputs feed into this node."
+              }
+            }
+          }
+        },
+        "output": {
+          "type": "string",
+          "description": "ID of the node whose output is the final result of this strategy."
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_total_cost_cents": { "type": "number", "exclusiveMinimum": 0 },
+        "max_wall_seconds": { "type": "number", "exclusiveMinimum": 0 },
+        "fallback_on_budget": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "vendor": { "type": "string" },
+            "model_hint": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

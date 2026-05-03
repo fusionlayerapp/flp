@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flp.fusionlayer.app/schema/v1/routine",
+  "title": "FLP Routine",
+  "description": "Cron-scheduled task: fetch inputs, run a prompt, deliver output via one or more channels.",
+  "type": "object",
+  "required": ["meta", "schedule", "delivery"],
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "$ref": "meta",
+      "properties": { "kind": { "const": "routine" } }
+    },
+    "schedule": {
+      "type": "object",
+      "required": ["cron"],
+      "additionalProperties": false,
+      "properties": {
+        "cron": { "type": "string", "minLength": 1, "description": "Standard cron expression (5-field)." },
+        "timezone": { "type": "string", "description": "IANA timezone (e.g. 'America/New_York'). Defaults to UTC." },
+        "jitter_mins": { "type": "number", "minimum": 0, "description": "Random jitter in minutes added at execution time." },
+        "quiet_hours": { "type": "string", "description": "Hours to suppress delivery (e.g. '22-07')." }
+      }
+    },
+    "prompt": {
+      "type": "string",
+      "description": "The generation prompt. May reference {{input}} for fetched content."
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type"],
+        "additionalProperties": false,
+        "properties": {
+          "type": { "type": "string", "enum": ["rss", "web", "search", "memory"] },
+          "url": { "type": "string", "format": "uri" },
+          "max_items": { "type": "number", "exclusiveMinimum": 0 },
+          "query": { "type": "string" }
+        }
+      }
+    },
+    "delivery": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["type"],
+        "additionalProperties": false,
+        "properties": {
+          "type": { "type": "string", "enum": ["email", "whatsapp", "telegram", "sms", "webhook"] },
+          "to": { "type": "string" },
+          "chat_id": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "subject": { "type": "string" },
+          "bundling": { "type": "string", "enum": ["default", "never"] }
+        }
+      }
+    },
+    "outbound_hosts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Allowlist of external hostnames this routine may fetch from."
+    },
+    "bundling": {
+      "type": "string",
+      "enum": ["default", "never"],
+      "description": "Global bundling override for all delivery channels."
+    }
+  }
+}
