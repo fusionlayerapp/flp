@@ -1,0 +1,24 @@
+# MIT License — Copyright 2026 FusionLayer Contributors
+# https://github.com/hn2/flp/blob/main/LICENSE
+
+kind: template
+version: 1
+id: reading-mode
+name: "Reading Mode"
+description: "A calm, wide-margin layout optimized for reading long-form AI responses. Larger font, generous spacing, centered content column."
+
+tokens:
+  density: comfortable
+  radius: smooth
+  font_scale: 1.1
+
+layout:
+  sidebar: hidden
+  header: minimal
+  home_view: chat
+  chat_panel_width: 44rem
+
+composition:
+  cards: elevated
+  list_mode: relaxed
+  default_tabs: [chat, notes]

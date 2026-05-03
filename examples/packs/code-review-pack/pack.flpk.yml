@@ -1,0 +1,18 @@
+# MIT License — Copyright 2026 FusionLayer Contributors
+# https://github.com/hn2/flp/blob/main/LICENSE
+
+kind: pack
+version: "1.0.0"
+id: "@fl/code-review-pack"
+name: "Code Review Pack"
+description: "Everything you need for consistent, high-quality AI code reviews. Bundles the code-review intent, cheap-then-strong strategy, concise guideline, and markdown structure guideline."
+
+primitives:
+  - kind: intent
+    ref: "@fl/code-review"
+  - kind: strategy
+    ref: "@fl/cheap-then-strong"
+  - kind: guideline
+    ref: "@fl/be-concise"
+  - kind: guideline
+    ref: "@fl/use-markdown-headings"

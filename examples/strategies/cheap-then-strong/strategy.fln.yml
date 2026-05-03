@@ -1,0 +1,36 @@
+# MIT License — Copyright 2026 FusionLayer Contributors
+# https://github.com/hn2/flp/blob/main/LICENSE
+
+meta:
+  uacp: "1.0.0"
+  kind: strategy
+  id: "@fl/cheap-then-strong"
+  version: "1.0.0"
+  author: "FusionLayer Contributors"
+
+graph:
+  nodes:
+    - id: fast
+      op: generate
+      adapter:
+        vendor: anthropic
+        model_hint: claude-haiku-4-5
+
+    - id: strong
+      op: generate
+      adapter:
+        vendor: anthropic
+        model_hint: claude-sonnet-4-6
+      inputs: [fast]
+      uses:
+        prompt: >
+          A fast model produced this draft response. Review it, fix any issues,
+          and produce the final polished answer. Preserve correct parts.
+
+  output: strong
+
+constraints:
+  max_total_cost_cents: 2.0
+  fallback_on_budget:
+    vendor: anthropic
+    model_hint: claude-haiku-4-5

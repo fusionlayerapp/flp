@@ -1,0 +1,25 @@
+# MIT License — Copyright 2026 FusionLayer Contributors
+# https://github.com/hn2/flp/blob/main/LICENSE
+
+meta:
+  uacp: "1.0.0"
+  kind: policy
+  id: "@fl/block-credit-cards"
+  version: "1.0.0"
+  author: "FusionLayer Contributors"
+
+enforce: both
+
+rules:
+  - type: secret_block
+    action: redact
+    params:
+      patterns:
+        - credit_card
+        - cvv
+        - card_expiry
+  - type: response_audit
+    action: block
+    params:
+      fail_on: [credit_card, cvv]
+      message: "Response blocked: contained payment card data."

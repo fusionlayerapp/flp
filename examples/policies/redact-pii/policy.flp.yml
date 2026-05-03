@@ -1,0 +1,17 @@
+# MIT License — Copyright 2026 FusionLayer Contributors
+# https://github.com/hn2/flp/blob/main/LICENSE
+
+meta:
+  uacp: "1.0.0"
+  kind: policy
+  id: "@fl/redact-pii"
+  version: "1.0.0"
+  author: "FusionLayer Contributors"
+
+enforce: both
+
+rules:
+  - type: pii_block
+    action: redact
+    params:
+      categories: [name, email, phone, address, ssn]

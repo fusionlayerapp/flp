@@ -1,0 +1,45 @@
+# MIT License — Copyright 2026 FusionLayer Contributors
+# https://github.com/hn2/flp/blob/main/LICENSE
+
+meta:
+  uacp: "1.0.0"
+  kind: strategy
+  id: "@fl/research-cite-synthesize"
+  version: "1.0.0"
+  author: "FusionLayer Contributors"
+
+graph:
+  nodes:
+    - id: decompose
+      op: generate
+      adapter:
+        vendor: anthropic
+        model_hint: claude-haiku-4-5
+      uses:
+        prompt: >
+          Break the research question into 3-5 distinct sub-questions that together
+          would answer it comprehensively. Output as a numbered list only.
+
+    - id: research
+      op: fanout
+      inputs: [decompose]
+      uses:
+        prompt: >
+          Answer this specific sub-question thoroughly. Include relevant facts,
+          statistics, and note any significant disagreements in the literature.
+          List your sources at the end.
+
+    - id: synthesize
+      op: fanin
+      inputs: [research]
+      uses:
+        prompt: >
+          Synthesize these research responses into a single coherent answer.
+          Integrate the evidence, resolve contradictions where possible, and
+          note where genuine uncertainty remains. Compile a unified source list.
+
+  output: synthesize
+
+constraints:
+  max_total_cost_cents: 8.0
+  max_wall_seconds: 90

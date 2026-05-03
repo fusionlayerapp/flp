@@ -1,0 +1,33 @@
+# MIT License — Copyright 2026 FusionLayer Contributors
+# https://github.com/hn2/flp/blob/main/LICENSE
+
+meta:
+  uacp: "1.0.0"
+  kind: routine
+  id: "@fl/weekly-standup-summary"
+  version: "1.0.0"
+  author: "FusionLayer Contributors"
+
+schedule:
+  cron: "0 8 * * 1"
+  timezone: "UTC"
+  jitter_mins: 10
+
+inputs:
+  - type: memory
+    query: "tasks, progress, blockers, completed work from the past week"
+    max_items: 20
+
+prompt: >
+  Based on recent context from the past week, generate a concise standup summary
+  covering:
+  - What was completed last week
+  - What's planned for this week
+  - Any blockers or risks
+
+  Keep it to 5-8 bullet points total. Write it in first person as if the user
+  is sharing it themselves. Be specific where the context allows.
+
+delivery:
+  - type: email
+    subject: "Weekly Standup — {{date}}"

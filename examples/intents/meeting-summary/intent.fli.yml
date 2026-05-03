@@ -1,0 +1,36 @@
+# MIT License — Copyright 2026 FusionLayer Contributors
+# https://github.com/hn2/flp/blob/main/LICENSE
+
+meta:
+  uacp: "1.0.0"
+  kind: intent
+  id: "@fl/meeting-summary"
+  version: "1.0.0"
+  author: "FusionLayer Contributors"
+
+trigger:
+  mode: intent
+  patterns:
+    - "summarize this meeting"
+    - "meeting notes"
+    - "summarize the call"
+    - "what were the action items"
+    - "write up from this transcript"
+    - "meeting recap"
+
+capabilities:
+  - summarization
+
+prompt: >
+  Summarize the meeting transcript or notes provided. Structure the output as:
+
+  **Summary** (2-3 sentences covering the main topic and outcome)
+
+  **Key Decisions** (bullet list — decisions made, not discussions)
+
+  **Action Items** (bullet list — owner, task, and deadline if mentioned)
+
+  **Open Questions** (bullet list — unresolved items needing follow-up)
+
+  Be factual. Only include items explicitly stated or clearly implied in the transcript.
+  Do not fabricate owners or deadlines that were not mentioned.
