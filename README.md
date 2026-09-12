@@ -54,12 +54,12 @@ rules:
       categories: [name, email, phone, address, ssn]
 ```
 
-`enforce: both` runs the rule pre-generation (scrubbing the prompt) and post-generation (scrubbing the response). Given the input `"Please help me email John Smith at john@example.com about his order"`, a runtime enforcing this policy substitutes `[NAME]` and `[EMAIL]` before the model ever sees the raw text, and the model never repeats it in its reply. The schema for this kind is [`schema/policy.json`](schema/policy.json); every other rule `type` it accepts (`secret_block`, `budget_cap`, `vendor_allowlist`, `export_block`, `banned_topics`, `response_audit`, `compliance_region`) is enumerated there.
+`enforce: both` requests enforcement before generation and on the response. The runtime determines which detectors, categories, and replacement text it supports; schema validation alone does not prove that a name or other sensitive value will be detected or removed. The schema for this kind is [`schema/policy.json`](schema/policy.json); every other rule `type` it accepts (`secret_block`, `budget_cap`, `vendor_allowlist`, `export_block`, `banned_topics`, `response_audit`, `compliance_region`) is enumerated there.
 
 ## How to implement
 
 1. Pick the primitive kind for what you're declaring (table above) and write a `.fl*.yml` file against its schema in [`schema/`](schema/) — use the matching example in [`examples/`](examples/) as a starting point.
-2. Lint it: `node tools/flp-lint/bin/flp-lint.js my-policy.flp.yml` (exit code 0 = valid; add `--json` for machine-readable output).
+2. Install the linter dependencies with `npm ci --prefix tools/flp-lint`, then run `node tools/flp-lint/bin/flp-lint.js my-policy.flp.yml` (exit code 0 = valid; add `--json` for machine-readable output).
 3. Ship the file with your project or submit it to a marketplace. Marketplace-distributed primitives should carry an Ed25519 detached signature — see [`docs/signing.md`](docs/signing.md) for the signing and verification steps.
 4. Any FLP-compliant runtime (FusionLayer today) reads the same file — no engine-specific rewrite needed.
 
