@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flp.fusionlayer.app/schema/v1/playbook",
+  "title": "FLP Playbook",
+  "description": "Ordered multi-step workflow. Each step runs a named prompt and passes results forward.",
+  "type": "object",
+  "required": ["meta", "steps"],
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "$ref": "meta",
+      "properties": { "kind": { "const": "playbook" } }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "prompt"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 1, "maxLength": 64 },
+          "name": { "type": "string", "description": "Human-readable step label." },
+          "prompt": { "type": "string", "description": "Step-specific instruction. May reference {{previous}} or step IDs." },
+          "adapter": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "vendor": { "type": "string" },
+              "model_hint": { "type": "string" }
+            }
+          },
+          "role": {
+            "type": "string",
+            "enum": ["planner", "executor", "verifier", "critic"],
+            "description": "Multi-vendor agent role for this step."
+          },
+          "allowed_actions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "description": "AAP action names or scoped IDs permitted during this step."
+          },
+          "max_tool_turns": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 64,
+            "description": "Maximum tool-calling turns allowed within this step."
+          },
+          "on_side_effect": {
+            "type": "string",
+            "enum": ["allow", "confirm", "deny"],
+            "description": "Side-effect confirmation policy for actions invoked in this step."
+          },
+          "depends_on": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Step IDs this step depends on (for non-linear playbooks)."
+          }
+        }
+      }
+    },
+    "context_carry": {
+      "type": "string",
+      "enum": ["none", "last", "all"],
+      "default": "all",
+      "description": "How much context from previous steps to carry forward."
+    }
+  }
+}

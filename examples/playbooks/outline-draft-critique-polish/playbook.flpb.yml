@@ -1,0 +1,61 @@
+# MIT License — Copyright 2026 FusionLayer Contributors
+# https://github.com/fusionlayerapp/flp/blob/main/LICENSE
+
+meta:
+  uacp: "1.0.0"
+  kind: strategy
+  id: "@fl/outline-draft-critique-polish"
+  version: "1.0.0"
+  author: "FusionLayer Contributors"
+
+graph:
+  nodes:
+    - id: outline
+      op: generate
+      adapter:
+        vendor: anthropic
+        model_hint: claude-haiku-4-5
+      uses:
+        prompt: >
+          Create a concise outline for the following writing task.
+          List the main sections and key points for each. Be structural, not verbose.
+
+    - id: draft
+      op: generate
+      adapter:
+        vendor: anthropic
+        model_hint: claude-sonnet-4-6
+      inputs: [outline]
+      uses:
+        prompt: >
+          Using this outline, write a complete first draft. Follow the structure
+          but let the prose flow naturally. Don't be mechanical.
+
+    - id: critique
+      op: critique-and-rank
+      adapter:
+        vendor: anthropic
+        model_hint: claude-sonnet-4-6
+      inputs: [draft]
+      uses:
+        prompt: >
+          Critique this draft. Identify: weak arguments, unclear passages, missing
+          evidence, tone inconsistencies, and structural problems. Be specific and direct.
+          Output a numbered list of issues.
+
+    - id: polish
+      op: generate
+      adapter:
+        vendor: anthropic
+        model_hint: claude-sonnet-4-6
+      inputs: [draft, critique]
+      uses:
+        prompt: >
+          Revise the draft addressing all critique points. Improve clarity, flow,
+          and persuasiveness. Preserve the author's voice. Output the final version only.
+
+  output: polish
+
+constraints:
+  max_total_cost_cents: 5.0
+  max_wall_seconds: 60

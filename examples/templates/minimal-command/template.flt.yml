@@ -1,0 +1,24 @@
+# MIT License — Copyright 2026 FusionLayer Contributors
+# https://github.com/fusionlayerapp/flp/blob/main/LICENSE
+
+kind: template
+version: 1
+id: minimal-command
+name: "Minimal Command"
+description: "A keyboard-first, distraction-free layout centered on the command palette. No sidebars, floating header, dense lists."
+
+tokens:
+  density: compact
+  radius: subtle
+  font_scale: 0.9
+
+layout:
+  sidebar: hidden
+  header: floating
+  home_view: command-palette
+  chat_panel_width: 56rem
+
+composition:
+  cards: flat
+  list_mode: dense
+  default_tabs: [chat, library, settings]

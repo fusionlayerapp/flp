@@ -1,0 +1,41 @@
+# MIT License — Copyright 2026 FusionLayer Contributors
+# https://github.com/fusionlayerapp/flp/blob/main/LICENSE
+
+meta:
+  uacp: "1.0.0"
+  kind: strategy
+  id: "@fl/always-claude-for-code"
+  version: "1.0.0"
+  author: "FusionLayer Contributors"
+
+graph:
+  nodes:
+    - id: route
+      op: route
+      uses:
+        prompt: >
+          Classify the user request as either "code" or "general".
+          Reply with only one word: code or general.
+
+    - id: code_path
+      op: generate
+      adapter:
+        vendor: anthropic
+        model_hint: claude-sonnet-4-6
+      inputs: [route]
+
+    - id: general_path
+      op: generate
+      adapter:
+        vendor: openai
+        model_hint: gpt-4o-mini
+      inputs: [route]
+
+    - id: merge
+      op: fanin
+      inputs: [code_path, general_path]
+
+  output: merge
+
+constraints:
+  max_wall_seconds: 30

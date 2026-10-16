@@ -1,0 +1,33 @@
+# MIT License — Copyright 2026 FusionLayer Contributors
+# https://github.com/fusionlayerapp/flp/blob/main/LICENSE
+
+meta:
+  uacp: "1.0.0"
+  kind: intent
+  id: "@fl/code-review"
+  version: "1.0.0"
+  author: "FusionLayer Contributors"
+
+trigger:
+  mode: intent
+  patterns:
+    - "review"
+    - "check my code"
+    - "look at this code"
+    - "what's wrong with this"
+    - "code review"
+    - "feedback on this function"
+
+capabilities:
+  - code_analysis
+
+prompt: >
+  Review the provided code for:
+  1. Bugs and logic errors
+  2. Security vulnerabilities (injection, auth issues, exposed secrets)
+  3. Performance issues
+  4. Style and readability
+  5. Missing edge case handling
+
+  For each issue found, state: the problem, why it matters, and a concrete fix.
+  If the code looks good, say so briefly — don't invent problems.

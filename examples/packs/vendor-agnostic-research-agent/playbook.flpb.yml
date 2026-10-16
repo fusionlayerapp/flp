@@ -1,0 +1,57 @@
+# MIT License — Copyright 2026 FusionLayer Contributors
+# https://github.com/fusionlayerapp/flp/blob/main/LICENSE
+
+meta:
+  uacp: "1.0.0"
+  kind: playbook
+  id: "@fl/vendor-agnostic-research-playbook"
+  version: "1.0.0"
+  author: "FusionLayer Contributors"
+
+steps:
+  - id: plan
+    name: "Decompose Research Goal"
+    role: planner
+    adapter:
+      vendor: anthropic
+      model_hint: claude-3-7-sonnet
+    prompt: >
+      Decompose the user's goal into 3-5 verifiable research queries and specify
+      which AAP actions should be invoked.
+    allowed_actions:
+      - search_web
+    max_tool_turns: 4
+    on_side_effect: allow
+
+  - id: execute
+    name: "Execute Web Search & Evidence Gathering"
+    role: executor
+    depends_on:
+      - plan
+    adapter:
+      vendor: google
+      model_hint: gemini-2.5-flash
+    prompt: >
+      Execute the planned search queries using {{plan}} and collect primary citations.
+    allowed_actions:
+      - search_web
+      - write_report
+    max_tool_turns: 8
+    on_side_effect: confirm
+
+  - id: verify
+    name: "Cross-Model Citation & Policy Verification"
+    role: verifier
+    depends_on:
+      - execute
+    adapter:
+      vendor: openai
+      model_hint: gpt-4.1
+    prompt: >
+      Verify all claims and citations from {{execute}} against the original goal
+      before approving final output.
+    allowed_actions: []
+    max_tool_turns: 1
+    on_side_effect: deny
+
+context_carry: all

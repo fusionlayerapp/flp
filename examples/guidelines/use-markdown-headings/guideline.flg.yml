@@ -1,0 +1,19 @@
+# MIT License — Copyright 2026 FusionLayer Contributors
+# https://github.com/fusionlayerapp/flp/blob/main/LICENSE
+
+meta:
+  uacp: "1.0.0"
+  kind: guideline
+  id: "@fl/use-markdown-headings"
+  version: "1.0.0"
+  author: "FusionLayer Contributors"
+
+shape:
+  tone: "structured"
+  instructions: >
+    Structure multi-part answers with Markdown headings (##, ###). Use a heading for each
+    distinct section. Use bullet lists for 3+ related items. Use numbered lists only for
+    sequential steps. Use code blocks for all code, commands, and file paths.
+    Do not use headings for single-topic responses under 4 sentences.
+
+post_rewrite: false

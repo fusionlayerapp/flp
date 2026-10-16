@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flp.fusionlayer.app/schema/v1/behavior",
+  "title": "FLP Behavior",
+  "description": "A persona identity bundle — tone, voice, writing style — applied as a unified character to the AI.",
+  "type": "object",
+  "required": ["meta", "identity"],
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "$ref": "meta",
+      "properties": { "kind": { "const": "behavior" } }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "description": "Character/persona name (e.g. 'Alex the Senior Engineer')." },
+        "role": { "type": "string", "description": "Role description used in system prompt." },
+        "tone": { "type": "string", "description": "Communication tone (e.g. 'warm and direct', 'formal and precise')." },
+        "voice": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Voice traits (e.g. ['pragmatic', 'empathetic', 'concise'])."
+        },
+        "instructions": { "type": "string", "description": "Additional behavioral instructions." },
+        "forbidden_phrases": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Phrases this persona never uses."
+        }
+      }
+    },
+    "post_rewrite": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, runtime may post-process responses to enforce this behavior."
+    }
+  }
+}

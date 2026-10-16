@@ -1,0 +1,40 @@
+# MIT License — Copyright 2026 FusionLayer Contributors
+# https://github.com/fusionlayerapp/flp/blob/main/LICENSE
+
+kind: pack
+version: "1.0.0"
+id: "@fl/vendor-agnostic-research-agent"
+name: "Vendor-Agnostic Research Agent Pack"
+description: "Multi-vendor agent pack combining Claude planning, Gemini/OpenAI tool execution via AAP v0.1 descriptors, and cross-model verification with hard PII/budget policies."
+author: "FusionLayer Contributors"
+license: "MIT"
+
+primitives:
+  - kind: behavior
+    ref: "@fl/rigorous-researcher"
+  - kind: playbook
+    ref: "./playbook.flpb.yml"
+  - kind: strategy
+    ref: "@fl/cheap-then-strong"
+  - kind: policy
+    ref: "@fl/redact-pii-strict"
+
+actions:
+  - name: search_web
+    ref: "./actions/search-web.aap.json"
+    descriptor_signature: "sha256:8831d493a172e0e1a7e7effb62df05f559531b2118053000d8eab3e8caffbe66"
+    side_effects:
+      - network
+    on_side_effect: allow
+  - name: write_report
+    ref: "./actions/write-report.aap.json"
+    descriptor_signature: "sha256:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+    side_effects:
+      - file_write
+    on_side_effect: confirm
+
+tags:
+  - agent
+  - research
+  - multi-vendor
+  - aap

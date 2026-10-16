@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flp.fusionlayer.app/schema/v1/meta",
+  "title": "FLP Primitive Metadata",
+  "description": "Common metadata block required at the root of every FLP primitive.",
+  "type": "object",
+  "required": ["uacp", "kind", "id", "version"],
+  "additionalProperties": false,
+  "properties": {
+    "uacp": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "UACP spec version this primitive targets (e.g. '1.0.0')."
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["policy", "guideline", "intent", "strategy", "routine", "behavior", "playbook", "template", "pack"],
+      "description": "Primitive kind — determines which top-level schema applies."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^@[\\w-]+\\/[\\w-]+$",
+      "description": "Scoped identifier, e.g. '@acme/redact-pii'."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of this primitive."
+    },
+    "author": {
+      "type": "string",
+      "description": "Human-readable author name or org."
+    },
+    "signature": {
+      "type": "string",
+      "description": "Ed25519 detached signature (base64url) — see docs/signing.md."
+    },
+    "sigVersion": {
+      "type": "integer",
+      "enum": [1, 2],
+      "description": "Signing envelope version (2 = FLP-SIG-V2 with delegated publisher certificate)."
+    },
+    "publisherCert": {
+      "type": "string",
+      "description": "Optional FLP-SIG-V2 publisher certificate (base64url)."
+    },
+    "contributes": {
+      "type": "object",
+      "description": "Declarative MMI contribution points across CLI, Web, Desktop, and Mobile.",
+      "additionalProperties": false,
+      "properties": {
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "description"],
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "panels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "title"],
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "slot": { "type": "string", "enum": ["inspector", "sidebar", "settings", "drawer"] }
+            }
+          }
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "description"],
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "input_schema": { "type": "object" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

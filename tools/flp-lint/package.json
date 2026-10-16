@@ -1,0 +1,30 @@
+{
+  "name": "@fusionlayer/flp-lint",
+  "version": "1.0.0",
+  "description": "Linter for FusionLayer Primitive (FLP) files",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": {
+    "flp-lint": "./bin/flp-lint.js"
+  },
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  },
+  "scripts": {
+    "test": "node --test src/*.test.js"
+  },
+  "keywords": ["flp", "fusionlayer", "primitives", "linter", "ai-orchestration"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fusionlayerapp/flp.git"
+  }
+}
