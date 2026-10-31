@@ -9,3 +9,8 @@ export {
   verifyFlpBundleV2,
   evaluateFlpCapabilities,
 } from './signing.js'
+export {
+  FLP_ERROR_CATALOG,
+  inspectFlpFile,
+  runFlpDoctor,
+} from './errors.js'
