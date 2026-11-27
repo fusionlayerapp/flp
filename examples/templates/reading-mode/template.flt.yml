@@ -9,16 +9,16 @@ description: "A calm, wide-margin layout optimized for reading long-form AI resp
 
 tokens:
   density: comfortable
-  radius: smooth
+  radius: medium
   font_scale: 1.1
 
 layout:
   sidebar: hidden
-  header: minimal
+  header: fixed
   home_view: chat
   chat_panel_width: 44rem
 
 composition:
-  cards: elevated
-  list_mode: relaxed
+  cards: rounded
+  list_mode: comfortable
   default_tabs: [chat, notes]
