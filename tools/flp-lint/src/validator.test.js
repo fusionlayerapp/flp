@@ -1,11 +1,27 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
+import { readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
 import { validate, validatePackCrossReferences } from './validator.js'
 import { lint } from './lint.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
+
+test('all shipped FLP examples pass lint', () => {
+  const examples = resolve(__dirname, '../../../examples')
+  function checkDirectory(directory) {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      const path = resolve(directory, entry.name)
+      if (entry.isDirectory()) checkDirectory(path)
+      else if (/\.fl(?:p|g|i|n|b|pb|r|t|pk)\.yml$/.test(entry.name)) {
+        const result = lint(path)
+        assert.ok(result.ok, `${path}: ${JSON.stringify(result.errors)}`)
+      }
+    }
+  }
+  checkDirectory(examples)
+})
 
 describe('validate — policy', () => {
   test('accepts valid policy', () => {
